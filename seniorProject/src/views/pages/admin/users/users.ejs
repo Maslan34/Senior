@@ -1,0 +1,157 @@
+<body>
+    <div class="container">
+      <br>
+      <% if (locals.validation_error != undefined || locals.success_message != undefined || locals.login_error != undefined) { %>
+      <%- include('../../../partials/_mesaj') %> 
+      <% } %>
+      <form action="/admin/searchBarcode" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="input-group mb-3">
+          <input type="text" name="search" class="form-control" placeholder="Barkod Numarası ile Ara..." aria-label="Barkod Numarası ile Ara..." aria-describedby="button-addon2">
+          <button class="btn btn-primary" type="submit">Ara</button>
+        </div>
+      </form>
+      
+      <table class="table mt-4">
+        <thead>
+          <tr id="tableHeaderRow">
+            <th scope="col">Barkod</th>
+            <th scope="col">Ürün Adı</th>
+            <th scope="col">Markası</th>
+            <th scope="col">Ürün Kodu</th>
+            <th scope="col">Düzenle/Sil</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Users.forEach(element => { %>
+          <tr>
+            <td><%-element.Barkod %></td>
+            <td><%-element['Ürün\r\nAdı'] %></td>
+            <td><%-element.Brand %></td>
+            <td><%-element['Ürün\r\nKodu'] %></td>
+            <td>
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#<%-element['Ürün\r\nAdı'].replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>2">Düzenle</button>
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#<%-element._id.toString().replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>">Sil</button>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <div class="flex justify-between mt-4">
+        <% if (PageNumber > 1) { %>
+          <a href="/admin/Products?pg=<%-PageNumber - 1 %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Önceki Sayfa</a>
+        <% } %>
+        
+        <a href="/admin/Products?pg=<%-Number(PageNumber) + 1 %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sonraki Sayfa</a>
+      </div>
+      
+      <br>
+      <br>
+
+    </div>
+    <% Users.forEach(element => { %>
+    <!-- Modal -->
+    <form action="/admin/removeProduct/<%-element.Barkod %>" method="post" enctype="application/x-www-form-urlencoded" class="modal fade" id="<%-element._id.toString().replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Silmeyi Onaylıyor musunuz?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <%-element['Ürün\r\nAdı'] %> silinecek silmeyi onaylıyor musunuz?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            <button type="submit" class="btn btn-danger">Sil</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <% }) %>
+    <% Users.forEach(element => { %>
+      <!-- Modal -->
+      <form action="/admin/editProduct/<%-element.Barkod %>" method="post" enctype="application/x-www-form-urlencoded" class="modal fade" id="<%-element['Ürün\r\nAdı'].replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"><%-element['Ürün\r\nAdı'] %> Düzenle.</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Barkod:</label>
+                  <input name="Barkod" placeholder="<%-element.Barkod %>" value="<%-element.Barkod %>" type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Ürün Adı:</label>
+                  <input name="Product_Name" placeholder="<%-element['Ürün\r\nAdı'] %>" value="<%-element['Ürün\r\nAdı'] %>" type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Marka:</label>
+                  <input name="Brand" placeholder="<%-element.Brand %>" value="<%-element.Brand %>" type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Ürün Kodu:</label>
+                  <input name="Product_Code" placeholder="<%-element['Ürün\r\nKodu'] %>" value="<%-element['Ürün\r\nKodu'] %>" type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Sayım Adeti:</label>
+                  <input name="SayilmasiGerekenAdet" placeholder="<%-element.SayilmasiGerekenAdet %>" value="<%-element.SayilmasiGerekenAdet %>" type="text" class="form-control" id="recipient-name">
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+              <button type="submit" class="btn btn-primary">Değiştir</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <% }) %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+  
+    <script>
+      function searchTable() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.querySelector(".table");
+        tr = table.getElementsByTagName("tr");
+  
+        // Başlıkları gizlememek için tr'yi görünür yapma
+        var tableHeaderRow = document.getElementById("tableHeaderRow");
+        tableHeaderRow.style.display = "";
+  
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td");
+          var found = false;
+          for (var j = 0; j < td.length; j++) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              found = true;
+              break;
+            }
+          }
+          if (found) {
+            tr[i].style.display = "";
+            tableHeaderRow.style.display = "";
+          } else {
+            tr[i].style.display = "none";
+            tableHeaderRow.style.display = "";
+          }
+        }
+      }
+  
+      document.addEventListener("DOMContentLoaded", function () {
+        var input = document.getElementById("searchInput");
+        input.addEventListener("input", function () {
+          searchTable();
+        });
+      });
+    </script>
+  </body>
+  

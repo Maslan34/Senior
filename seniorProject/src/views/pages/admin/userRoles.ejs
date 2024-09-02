@@ -1,0 +1,253 @@
+
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <br>
+          <!-- Navbar -->
+
+          <div class="nav-tabs mb-4">
+            <ul class="nav nav-tabs nav-fill" role="tablist">
+              <li class="nav-item">
+                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-home" aria-controls="navs-justified-home" aria-selected="true" style="color:black; font-size:larger">
+                   Users
+                  <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger">3</span>
+                </button>
+              </li>
+              <li class="nav-item">
+                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-roles" aria-controls="navs-justified-roles" aria-selected="false" style="color:black; font-size:larger">
+                  Current Roles
+                </button>
+              </li>
+            
+            
+            </ul>
+            <div class="tab-content">
+              
+              <div class="tab-pane fade show active" id="navs-justified-home" role="tabpanel">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
+                  <div class="container-sm">
+                    <span style="font-size: larger; color: black;">Current Users</span>
+
+                  
+                    
+                    <form class="d-flex " onsubmit="return false" >
+                      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                      <button class="btn btn-outline-primary" type="submit">Search</button>
+                      
+                    </form>
+                    
+                  
+                       
+                      
+                    </div>
+
+                    
+                  </nav>
+               
+                  <div class="card">
+                    
+                    
+                    <div class="card-body">
+                      <div class="table-responsive text-nowrap">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Given Name</th>
+                              <th>Family Name</th>
+                              <th>User Name</th>
+                              <th>Email</th>
+                              <th>Settings</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <% Users.forEach(element => { %>
+                     
+                              <tr>
+                              
+                                <td><%= element.givenName %> </td>
+                              
+                                <td><%= element.familyName %></td>
+                                <td><%= element.username %></td>
+                                <td><%= element.email %></td>
+                                <td>
+                                  <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                      <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Email</a>
+                                      <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Edit User</a>
+                                      <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Disable</a>
+                                      <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Remove</a>
+  
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                             
+                             
+                              <% }) %>
+
+
+                            
+                      
+                           
+                          
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              
+              <div class="tab-pane fade" id="navs-justified-roles" role="tabpanel">
+
+                
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+                  <div class="container-sm">
+                    <span style="font-size: larger; color: black;">Current Roles</span>
+
+                  
+                    
+                    <form class="d-flex " onsubmit="return false" >
+                      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                      <button class="btn btn-outline-primary" type="submit">Search</button>
+                      
+                    </form> 
+                    </div>
+            </nav> 
+                   <br>                  
+                  <div class="card">
+
+                    <div class="card-body">
+
+                      
+                      <div class="table-responsive text-nowrap">
+                        <table class="table table-bordered">
+
+                          
+                          <thead>
+                            <tr>
+                              <th>Role Name</th>
+                              <th>Permission level</th>
+                              <th>Submission</th>
+                              <th>Reiew</th>
+                              <th>Copyediting</th>
+                              <th>production</th>
+                              <th>Settings</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              
+                              <td>Journal manager </td>
+                            
+                              <td>Journal manager</td>
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+
+
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+                              <td>
+                                <div class="dropdown">
+                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    
+                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Edit</a>
+                                    
+                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Remove</a>
+
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              
+                              <td>Journal editor </td>
+                            
+                              <td>Journal manager</td>
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+
+
+                              <td><div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                
+                              </div></td>
+                              <td>
+                                <div class="dropdown">
+                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    
+                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Edit</a>
+                                    
+                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Remove</a>
+
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                           
+                          
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  
+                  </div>
+              </div>
+
+            
+          </div>
+
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+    <div class="buy-now">
+      <a href="#" target="_blank" class="btn btn-warning btn-buy-now">Help</a>
+    </div>
+    
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+   
+  </body>
+</html>

@@ -1,0 +1,178 @@
+<title>Sayım Listesi</title>
+<body>
+  <div class="container">
+    <br>
+    <% if (locals.validation_error != undefined || locals.success_message != undefined || locals.login_error != undefined) { %>
+    <%- include('../../../partials/_mesaj') %> 
+    <% } %>   
+    <table class="table mt-4">
+      <thead>
+        <tr id="tableHeaderRow">
+          <th scope="col">Sayim Adı</th>
+          <th scope="col">Sayim Rafı</th>
+          <th scope="col">erpOfis</th>
+          <th scope="col">erpMagaza</th>
+          <th scope="col">erpDepo</th>
+          <th scope="col">Sayım Açıklaması</th>
+          <th scope="col">Düzenle/Detay</th>
+          <th scope="col">İptal</th>
+          <th scope="col">Kesinleştir</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Users.forEach(element => { %>
+        <tr>
+          <td><%-element.SayimAdi %></td>
+          <td><%-element.RafAdi %></td>
+          <td><%-element.sayimYapilanOfis %></td>
+          <td><%-element.sayimYapilanMagaza %></td>
+          <td><%-element.sayimYapilanDepo %></td>
+          <td><%-element.SayimAciklama %></td>
+          <td>
+            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"><a href="/sayimDetaylari?id=<%-element.sayimUID %>&pg=1">Detaylar</a></button>
+            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#<%-element.sayimUID.replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>2">Düzenle</button>
+          </td>
+          <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#<%-element.sayimUID.toString().replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>3">İptal</button></td>
+          <td><button type="button" class="btn btn-success" data-toggle="modal" data-target="#<%-element.sayimUID.toString().replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>">Kesinleştir</button></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% if (!ozet) { %>
+      <div class="flex justify-between mt-4">
+        <% if (PageNumber > 1) { %>
+          <a href="/sayimListesi?pg=<%-PageNumber - 1 %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Önceki Sayfa</a>
+        <% } %>
+        
+        <a href="/sayimListesi?pg=<%-Number(PageNumber) + 1 %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sonraki Sayfa</a>
+      </div>
+    <% } else { %>
+      <div class="flex justify-between mt-4">
+        <% if (PageNumber > 1) { %>
+          <a href="/ozetsayimListesi?pg=<%-PageNumber - 1 %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Önceki Sayfa</a>
+        <% } %>
+        
+        <a href="/ozetsayimListesi?pg=<%-Number(PageNumber) + 1 %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sonraki Sayfa</a>
+      </div>
+      <% } %>
+      <% Users.forEach(element => { %>
+        <form action="/Consolidation/<%-element.sayimUID %>" method="post" enctype="application/x-www-form-urlencoded" class="modal fade" id="<%-element.sayimUID.toString().replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Kesinleştirmeyi Onaylıyor musunuz?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                Sayim Adı: <%-element.SayimAdi %> Sayim Rafı: <%-element.RafAdi %> kesinleştirmeyi onaylıyor musunuz?
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="submit" class="btn btn-success">Kesinleştir</button>
+                </div>
+            </div>
+            </div>
+        </form>
+        <% }) %>
+        <% Users.forEach(element => { %>
+          <form action="/CancelSayim/<%-element.sayimUID %>" method="post" enctype="application/x-www-form-urlencoded" class="modal fade" id="<%-element.sayimUID.toString().replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">İptali Onaylıyor musunuz?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+                  <div class="modal-body">
+                  Sayim Adı: <%-element.SayimAdi %> Sayim Rafı: <%-element.RafAdi %> iptali onaylıyor musunuz?
+                  </div>
+                  <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                  <button type="submit" class="btn btn-danger">İptal Et</button>
+                  </div>
+              </div>
+              </div>
+          </form>
+          <% }) %>
+        <% Users.forEach(element => { %>
+          <form action="/editProduct/<%-element.sayimUID %>" method="post" enctype="application/x-www-form-urlencoded" class="modal fade" id="<%-element.sayimUID.toString().replace(/\s/g, '').replace(/\d/g, '').replace(/[&%.+(\^)]/g, '') %>2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel"><%-element.SayimAdi %> Düzenle.</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Sayim Adı:</label>
+                      <input name="SayimAdi" placeholder="<%-element.SayimAdi %>" value="<%-element.SayimAdi %>" type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Raf Adı:</label>
+                      <input name="RafAdi" placeholder="<%-element.RafAdi %>" value="<%-element.RafAdi %>" type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Sayım Açıklaması:</label>
+                      <input name="SayimAciklama" placeholder="<%-element.SayimAciklama %>" value="<%-element.SayimAciklama %>" type="text" class="form-control" id="recipient-name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                  <button type="submit" class="btn btn-primary">Değiştir</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <% }) %>
+    <br>
+    <br>
+
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function searchTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.querySelector(".table");
+      tr = table.getElementsByTagName("tr");
+
+      // Başlıkları gizlememek için tr'yi görünür yapma
+      var tableHeaderRow = document.getElementById("tableHeaderRow");
+      tableHeaderRow.style.display = "";
+
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var found = false;
+        for (var j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            found = true;
+            break;
+          }
+        }
+        if (found) {
+          tr[i].style.display = "";
+          tableHeaderRow.style.display = "";
+        } else {
+          tr[i].style.display = "none";
+          tableHeaderRow.style.display = "";
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var input = document.getElementById("searchInput");
+      input.addEventListener("input", function () {
+        searchTable();
+      });
+    });
+  </script>
+</body>

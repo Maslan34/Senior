@@ -1,0 +1,112 @@
+
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+          
+          <div class="card">
+                    
+            <div class="card-body">
+              <div class="table-responsive text-nowrap">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Article</th>
+                      <th>Settings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <% makaleler.forEach(makale => { %>
+                    <tr>
+                      
+                      <td><%= makale.authorName %></td>
+                    
+                      <td><span class="badge bg-label-primary me-1"><%= makale.status%></span></td>
+
+
+                      <% 
+                      // JavaScript'te tarih ve saat formatını düzenlemek için
+                        let createdAt = new Date(makale.createdAt);
+                        let formattedDate = ("0" + createdAt.getDate()).slice(-2) + "/" + ("0" + (createdAt.getMonth() + 1)).slice(-2) + "/" + createdAt.getFullYear();
+                        let formattedTime = ("0" + createdAt.getHours()).slice(-2) + ":" + ("0" + createdAt.getMinutes()).slice(-2);
+                        %>
+                                            
+                        <td><%= formattedDate + "-" + formattedTime %></td>
+                        <td>
+                        <a href="/uploads/images/<%= makale.pdfThesis %>" download="<%= makale.title %>_thesis.pdf">
+                        İndir
+                        </a>
+                        </td>
+                        <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<%-makale.makaleID %>">
+                        Launch demo modal
+                        </button>
+                        </td>
+                      <% }) %>
+                    </tr>
+
+                  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+            
+          
+        </div>
+
+            
+
+     
+    <div class="buy-now">
+      <a href="#" target="_blank" class="btn btn-warning btn-buy-now">Help</a>
+    </div>
+
+
+
+    
+    <!-- Core JS -->
+    <% makaleler.forEach(element => { %>
+      <div class="modal fade" id="<%-element.makaleID %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/admin/adminOnay?q=<%-element.makaleID %>" method="post" enctype="application/x-www-form-urlencoded">
+              <div class="modal-body">
+                
+                  <h2>Onayla-Reddet</h2>
+                  <select name="onaylaReddet">
+                    <option value="Onayla">Onayla</option>
+                    <option value="Reddet">Reddet</option>
+                  </select>
+                  <h2>Hangi Editörlere Gönderiliyor</h2>
+                  
+                  <select name="editor" id="">
+                    <% Editors.forEach(element => { %>
+                      <option value="<%-element.userUniqueID %>">İsmi Soyismi: <%-element.givenName %> <%-element.familyName %> İlgilendiği Alan: <%-element.topics%></option>
+                      <% }) %>
+
+                  </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+    
+    <!-- build:js assets/vendor/js/core.js -->
+    

@@ -1,0 +1,50 @@
+<body>
+    <div class="container">
+        <br>
+        <br>
+        <% if (locals.validation_error != undefined || locals.success_message != undefined || locals.login_error != undefined) { %>
+          <%- include('../../../partials/_mesaj') %> 
+            <% } %>
+      <form action="/admin/addUser" method="post" enctype="application/x-www-form-urlencoded">
+        
+        <div class="mb-3">
+          <label for="name" class="form-label">İsim</label>
+          <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+          <label for="surname" class="form-label">Soyisim</label>
+          <input type="text" class="form-control" id="surname" name="surname" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="text" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="phoneNumber" class="form-label">Telefon Numarası</label>
+          <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+        </div>
+        <div class="mb-3">
+          <label for="erpDepo" class="form-label">Departman</label>
+          <input type="text" class="form-control" id="Departman" name="Departman" required>
+        </div>
+        <div class="mb-3">
+          <label for="Permission" class="form-label">Yetki Seviyesi</label>
+          <select class="form-control" id="Permission" name="Permission" required>
+            <option value="1">Baş Editor</option>
+            <option value="2">Editör</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">Kullanıcı Adı</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Parola</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Kullanıcı Ekle</button>
+      </form>
+    </div>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+  </body>

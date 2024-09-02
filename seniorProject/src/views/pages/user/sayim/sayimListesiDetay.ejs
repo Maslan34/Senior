@@ -1,0 +1,125 @@
+<title>Sayım Listesi</title>
+<body>
+  <div class="container">
+    <br>
+    <% if (locals.validation_error != undefined || locals.success_message != undefined || locals.login_error != undefined) { %>
+    <%- include('../../../partials/_mesaj') %> 
+    <% } %>
+    <button id="downloadButton" class="bg-yellow-400 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+      Verileri İndir
+    </button>
+    <button class="bg-blue-400 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" onclick="window.location.href='/ozetsayimListesi?id=<%-sayimID  %>'">
+      Özet Listeyi Getir
+    </button>
+    <table class="table mt-4">
+      <thead>
+        <tr id="tableHeaderRow">
+          <th scope="col">Barkod</th>
+          <th scope="col">Ürün Adı</th>
+          <th scope="col">Envanter</th>
+          <th scope="col">Sayılan Adet</th>
+          <th scope="col">Aradaki Fark</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Users.forEach(element => { %>
+        <tr>
+          <td><%-element.Barcode %></td>
+          <td><%-element.Product_Name %></td>
+          <td><%-element.SayilmasiGerekenAdet %></td>
+          <td><%-element.SayilanAdet %></td>
+          <td><%- (Number(element.SayilmasiGerekenAdet || 0) - Number(element.SayilanAdet || 0)) %></td>
+
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    
+    
+    <br>
+    <br>
+
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function searchTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.querySelector(".table");
+      tr = table.getElementsByTagName("tr");
+
+      // Başlıkları gizlememek için tr'yi görünür yapma
+      var tableHeaderRow = document.getElementById("tableHeaderRow");
+      tableHeaderRow.style.display = "";
+
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var found = false;
+        for (var j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            found = true;
+            break;
+          }
+        }
+        if (found) {
+          tr[i].style.display = "";
+          tableHeaderRow.style.display = "";
+        } else {
+          tr[i].style.display = "none";
+          tableHeaderRow.style.display = "";
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var input = document.getElementById("searchInput");
+      input.addEventListener("input", function () {
+        searchTable();
+      });
+    });
+  </script>
+  <script>
+    async function downloadDataAsExcel() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+
+      if (id) {
+        const url = '/financer/download-excelAccepted';
+        const body = new URLSearchParams();
+        body.append('id', id);
+
+        var response = await fetch(url, {
+          method: 'POST',
+          body: body,
+        });
+
+        // Geri kalan kodlar...
+      } else {
+        console.error('id parametresi bulunamadı.');
+      }
+      console.log(response)
+      if (response.ok) {
+        const blob = await response.blob(); // Sunucudan gelen veriyi blob olarak al
+        
+        const url = URL.createObjectURL(blob); // Blob'u URL'e dönüştür
+  
+        const a = document.createElement('a'); // Yeni bir a elementi oluştur
+        a.href = url;
+        a.download = 'Table.xlsx'; // İndirilecek dosyanın adı
+        a.click(); // Otomatik indirme işlemini tetikle
+  
+        URL.revokeObjectURL(url); // URL'i temizle
+      } else {
+        console.error('İndirme başarısız oldu.');
+      }
+    }
+  
+    const downloadButton = document.getElementById('downloadButton');
+    downloadButton.addEventListener('click', downloadDataAsExcel);
+  </script>
+</body>

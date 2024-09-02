@@ -1,0 +1,240 @@
+
+
+          <!-- Content wrapper -->
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Hakemlerin onayladığı makaleler /</span> Makale inceleme</h4>
+            
+            <div class="row">
+              <div class="card">
+                    
+                    
+                <div class="card-body">
+                  <div class="table-responsive text-nowrap">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Makale Yazarı</th>
+                          <th>Başlık</th>
+                          <th>Konu</th>
+                          <th>İçerik</th>
+                          <th>Tarih</th>
+                          <th>Gönderilen Hakemler</th>
+                          <th>Oy Kullanan Hakem Sayısı</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+
+
+<% findMakaleler.forEach(element => { %>
+  <tr>
+                          
+    <td style="display: none;" ><%= element.makaleID %> </td>
+    
+    <td><%- element.authorName %> </td>
+    <td><%- element.title %></td>
+    <td><%- element.subject %></td>
+    <td><%- element.makaleIcerigi.articletype %></td>
+    <% 
+    // JavaScript'te tarih ve saat formatını düzenlemek için
+    let createdAt = new Date(element.createdAt);
+    let formattedDate = ("0" + createdAt.getDate()).slice(-2) + "/" + ("0" + (createdAt.getMonth() + 1)).slice(-2) + "/" + createdAt.getFullYear();
+    let formattedTime = ("0" + createdAt.getHours()).slice(-2) + ":" + ("0" + createdAt.getMinutes()).slice(-2);
+  %>
+  
+  <td><%= formattedDate + "-" + formattedTime %></td>
+  <td><% element.seenAbleRefree.forEach(element => { %>
+    <br>
+   <%-element.Name_Surname %>
+  <% }) %></td>
+  <td><%-element.refreeNotes.length %></td>
+  <td>
+    <a href="/uploads/images/<%= element.pdfThesis %>" download="<%= element.title %>_thesis.pdf">
+      İndir
+    </a>
+  </td>
+  
+    
+    <td>
+      <a href="/user/hakemeGonder?id=<%-element.makaleID %>" class="btn btn-primary">
+        Hakeme Gönder
+      </a>
+      <a href="#" class="btn btn-primary open-modal" data-toggle="modal" data-target="#inceleModal">
+        İncele
+      </a>
+    </td>
+  </tr>
+  
+ <% }) %>
+                 
+                       
+                      
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+    <!-- Modal -->
+<div class="modal fade" id="inceleModal" tabindex="-1" role="dialog" aria-labelledby="inceleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inceleModalLabel">Makaleyi İncele</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <strong>Makale Yazarı: </strong><span id="makaleYazari"></span>
+          </div>
+          <div>
+            <strong>Başlık: </strong><span id="makaleBaslik"></span>
+          </div>
+          <div>
+            <strong>Konu: </strong><span id="makaleKonu"></span>
+          </div>
+          <div>
+            <strong>İçerik: </strong><span id="makaleIcerik"></span>
+          </div>
+          <div>
+            <strong>Tarih: </strong><span id="makaleTarih"></span>
+          </div>
+          <input type="hidden" id="makaleID" name="makaleID">
+          
+          <!-- Hakemlerin Yorumları bölümü -->
+          <div style="padding-top: 20px;">
+            <h5>Hakemlerin Yorumları</h5>
+            <div id="refreeNotesSection">
+              <!-- refreeNotes için döngü -->
+              <% findMakaleler.forEach(element => { %>
+                <% element.refreeNotes.forEach(note => { %>
+                  <div>
+                    <strong>Refree İsmi: </strong><span><%= note.refreeName %></span>
+                  </div>
+                  <div>
+                    <strong>Refree Kararı: </strong><span><%= note.refreeDecision %></span>
+                  </div>
+                  <div>
+                    <strong>Refree Notu: </strong><span><%= note.refreeNote %></span>
+                  </div>
+                  <div>
+                    <strong>
+                    <a href="/uploads/images/<%= note.refreePdf %>" download="<%= note.refreeName %>_thesis.pdf">
+                      Hakem Pdf'i
+                    </a>
+                  </strong>
+                  </div>
+                  <hr>
+                <% }) %>
+              <% }) %>
+              <!-- refreeNotes için döngü sonu -->
+            </div>
+          </div>
+  
+          <form id="inceleForm">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="onayliyorum" name="karar" value="onayliyorum">
+              <label class="form-check-label" for="onayliyorum">Onaylıyorum</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="reddediyorum" name="karar" value="reddediyorum">
+              <label class="form-check-label" for="reddediyorum">Reddediyorum</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+          <button type="submit" form="inceleForm" class="btn btn-primary">Gönder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+<!-- Bootstrap CSS -->
+
+<!-- jQuery (gerekiyorsa) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+<script>
+  $(document).ready(function() {
+    $('.open-modal').click(function() {
+      var rowData = $(this).closest('tr').find('td');
+      var makaleID = $(rowData[0]).text(); // Makale ID'sini ilk sütundan al
+      $('#makaleID').val(makaleID);
+
+      $('#makaleYazari').text($(rowData[1]).text());
+      $('#makaleBaslik').text($(rowData[2]).text());
+      $('#makaleKonu').text($(rowData[3]).text());
+      $('#makaleIcerik').text($(rowData[4]).text());
+      $('#makaleTarih').text($(rowData[5]).text());
+
+      $('#inceleModal').modal('show');
+    });
+
+    $('#inceleForm').submit(function(event) {
+      event.preventDefault();
+
+      var editorDecision = $('#onayliyorum').prop('checked') ? 1 : ($('#reddediyorum').prop('checked') ? 2 : null);
+      
+      var makaleID = $('#makaleID').val();
+
+      // Checkbox'ların durumunu kontrol et
+      if (editorDecision === null) {
+        console.error('Lütfen bir karar verin!');
+        return; // Formu göndermeyi durdur
+      }
+
+      $.ajax({
+        url: '/editorDecisionPost',
+        method: 'POST',
+        data: {
+          makaleID: makaleID,
+          editorDecision: parseInt(editorDecision),
+        
+        },
+        success: function(response) {
+          console.log(response);
+          $('#inceleModal').modal('hide');
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+
+    $('#inceleModal').on('hidden.bs.modal', function() {
+      location.reload();
+    });
+
+    $('#onayliyorum').change(function() {
+      if (this.checked) {
+        $('#reddediyorum').prop('checked', false);
+      }
+    });
+
+    $('#reddediyorum').change(function() {
+      if (this.checked) {
+        $('#onayliyorum').prop('checked', false);
+      }
+    });
+  });
+</script>

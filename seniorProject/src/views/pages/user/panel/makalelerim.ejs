@@ -1,0 +1,205 @@
+
+          <!-- Content wrapper -->
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Makale işlemleri /</span> Makalelerim</h4>
+            
+            <div class="row">
+              <div class="card">
+                    
+                    
+                <div class="card-body">
+                  <div class="table-responsive text-nowrap">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Makale Yazarı</th>
+                          <th>Başlık</th>
+                          <th>Konu</th>
+                          <th>İçerik</th> 
+                          <th>Revizyon sayısı</th> 
+                          <th>Tarih</th>
+                          <th>Durum</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+
+
+<% findMakaleler.forEach(element => { %>
+  <tr>
+                          
+    <td><%- element.authorName %> </td>
+  
+    <td><%- element.title %></td>
+    <td><%- element.subject %></td>
+    <td><%- element.makaleIcerigi.articletype %></td>
+    <td><%- element.revisionCount %></td>
+    <% 
+    // JavaScript'te tarih ve saat formatını düzenlemek için
+    let createdAt = new Date(element.createdAt);
+    let formattedDate = ("0" + createdAt.getDate()).slice(-2) + "/" + ("0" + (createdAt.getMonth() + 1)).slice(-2) + "/" + createdAt.getFullYear();
+    let formattedTime = ("0" + createdAt.getHours()).slice(-2) + ":" + ("0" + createdAt.getMinutes()).slice(-2);
+  %>
+  
+  <td><%= formattedDate + "-" + formattedTime %></td>
+  <td>
+    <% if (element.status === 'accepted') { %>
+      Yayınlandı
+    <% } else if (element.status === 'rejected') { %>
+      Reddedildi
+    <% } else if (element.status === 'pending' || element.status === 'success' || element.status === 'approval') { %>
+      İşlemde
+    <% } %>
+  </td>
+    <td>
+    <a href="/uploads/images/<%= element.pdfThesis %>" download="<%= element.title %>_thesis.pdf">
+      İndir
+    </a>
+  </td>
+  
+  <% if (element.revisionCount < 3) { %>
+    <td>
+      <a href="/user/makaleGuncelle/<%= element.makaleID %>" class="btn btn-primary" >
+        Düzenle(<%= 3 - element.revisionCount %>)
+      </a>
+    </td>
+  <% } %>
+  <td>
+    <a href="#" class="btn btn-primary open-modal" data-toggle="modal" data-target="#inceleModal">
+      Detay görüntüle
+    </a>
+  </td>
+  </tr>
+  
+ <% }) %>
+                 
+                       
+                      
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+   
+    <!-- Modal -->
+<div class="modal fade" id="inceleModal" tabindex="-1" role="dialog" aria-labelledby="inceleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inceleModalLabel">Makaleyi İncele</h5>
+       
+      </div>
+      <div class="modal-body">
+        <div>
+          <strong>Makale Yazarı: </strong><span id="makaleYazari"></span>
+        </div>
+        <div>
+          <strong>Başlık: </strong><span id="makaleBaslik"></span>
+        </div>
+        <div>
+          <strong>Konu: </strong><span id="makaleKonu"></span>
+        </div>
+        <div>
+          <strong>İçerik: </strong><span id="makaleIcerik"></span>
+        </div>
+        <div>
+          <strong>revizyon sayısı: </strong><span id="makaleRevCount"></span>
+        </div>
+        <div>
+          <strong>Tarih: </strong><span id="makaleTarih"></span>
+        </div>
+        <input type="hidden" id="makaleID" name="makaleID">
+        
+        <!-- Hakemlerin Yorumları bölümü -->
+        <div style="padding-top: 20px;">
+          <h5>Hakemlerin Yorumları</h5>
+          <div id="refreeNotesSection">
+            <!-- refreeNotes için döngü -->
+            <% findMakaleler.forEach(element => { %>
+              <% element.refreeNotes.forEach(note => { %>
+                <div>
+                  <strong>Hakem Adı: </strong><span><%= note.refreeName %></span>
+                </div>
+                <div>
+                  <strong>Hakem Kararı: </strong><span><%= note.refreeDecision %></span>
+                </div>
+                <div>
+                  <strong>Hakem Notu: </strong><span><%= note.refreeNote %></span>
+                </div>
+                <div>
+                  <strong>
+                  <a href="/uploads/images/<%= note.refreePdf %>" download="<%= note.refreeName %>_thesis.pdf">
+                    Hakem Pdf'i
+                  </a>
+                </strong>
+                </div>
+                <hr>
+              <% }) %>
+            <% }) %>
+            <!-- refreeNotes için döngü sonu -->
+          </div>
+        </div>
+
+        
+      </div>
+      <div class="modal-footer">
+        <button type="submit" form="inceleForm" class="btn btn-primary">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Bootstrap CSS -->
+
+<!-- jQuery (gerekiyorsa) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- ... (Önceki HTML kodları) ... -->
+
+<script>
+  $(document).ready(function() {
+    $('.open-modal').click(function() {
+      var rowData = $(this).closest('tr').find('td');
+      // Diğer işlemler
+
+      // Makale detaylarını modal içine yerleştirme
+      $('#makaleYazari').text($(rowData[0]).text());
+      $('#makaleBaslik').text($(rowData[1]).text());
+      $('#makaleKonu').text($(rowData[2]).text());
+      $('#makaleIcerik').text($(rowData[3]).text());
+      $('#makaleRevCount').text($(rowData[4]).text());
+      $('#makaleTarih').text($(rowData[5]).text());
+
+      $('#inceleModal').modal('show');
+    });
+
+    $('#inceleModal').on('hidden.bs.modal', function () {
+      // Modal kapatıldığında yapılacak işlemler
+      location.reload(); // Sayfayı yenile
+    });
+
+    $('#inceleModal .modal-footer button').click(function() {
+      $('#inceleModal').modal('hide');
+    });
+  });
+</script>
+
+
